@@ -1,0 +1,24 @@
+{
+  "name": "kekstagram",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Une tentative de js pour projet de cours en ligne numéro 2",
+  "author": "Nadia Pillard",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jakovich/js_essai_keks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jakovich/js_essai_keks/issues"
+  },
+
+  "devDependencies": {
+    "eslint": "2.4.0"
+  },
+  "scripts": {
+    "test": "eslint build/js"
+  },
+  "engines": {
+    "node": "^5.0.0"
+  }
+}
