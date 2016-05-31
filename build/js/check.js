@@ -1,20 +1,20 @@
 'use strict';
-var getMessage = function(a, b) {
-  var msg;
+function getMessage(a, b) {
+  let msg = `Вы загрузили что-то непонятное, возьмите себя в руки и найдите подходящий формат`;
   
   switch (typeof(a)) {
       
     case 'boolean':
       if (a) {
-        msg = 'Переданное GIF-изображение анимировано и содержит ' + b + ' кадров';
+        msg = `Переданное GIF-изображение анимировано и содержит ${b} кадров`;
         
       } else {
-        msg = 'Переданное GIF-изображение не анимировано';
+        msg = `Переданное GIF-изображение не анимировано`;
       }
       break;
       
     case 'number':
-      msg = 'Переданное SVG-изображение содержит ' + a + ' объектов и ' + (b * 4) + ' атрибутов';
+      msg = `Переданное SVG-изображение содержит ${a} объектов и ${b * 4} атрибутов`;
       break;
       
     case 'object':
@@ -28,13 +28,13 @@ var getMessage = function(a, b) {
         var square = shortestArr.reduce(function(sum, current, i) {
           return sum + current * longestArr[i];
         }, 0 );
-        msg = 'Общая площадь артефактов сжатия: ' + square + ' пикселей';
+        msg = `Общая площадь артефактов сжатия: ${square} пикселей`;
         
       } else {
         var sum = a.reduce(function(sum, current) {
           return sum + current;
         }, 0);
-        msg = 'Количество красных точек во всех строчках изображения: ' + sum;
+        msg = `Количество красных точек во всех строчках изображения: ${sum}`;
       }
       
       break;
