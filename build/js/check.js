@@ -25,15 +25,11 @@ function getMessage(a, b) {
           longestArr = b;
           shortestArr = a;
         }
-        var square = shortestArr.reduce(function(sum, current, i) {
-          return sum + current * longestArr[i];
-        }, 0 );
+        var square = shortestArr.reduce((sum, current, i) => sum + current * longestArr[i], 0 );
         msg = `Общая площадь артефактов сжатия: ${square} пикселей`;
         
       } else {
-        var sum = a.reduce(function(sum, current) {
-          return sum + current;
-        }, 0);
+        var sum = a.reduce((sum, current) => sum + current, 0);
         msg = `Количество красных точек во всех строчках изображения: ${sum}`;
       }
       
