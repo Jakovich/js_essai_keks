@@ -104,6 +104,7 @@
 
       // Установка начальной точки системы координат в центр холста.
       this._ctx.translate(this._container.width / 2, this._container.height / 2);
+      
 
       var displX = -(this._resizeConstraint.x + this._resizeConstraint.side / 2);
       var displY = -(this._resizeConstraint.y + this._resizeConstraint.side / 2);
@@ -119,6 +120,36 @@
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
+      
+      //отрисовка затемненной области
+      this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
+      this._ctx.beginPath();
+      this._ctx.moveTo((-this._container.width / 2), (-this._container.height / 2));
+      this._ctx.lineTo((-this._container.width / 2), this._container.height);
+      this._ctx.lineTo((this._container.width), this._container.height);
+      this._ctx.lineTo((this._container.width), -this._container.height);
+      this._ctx.lineTo((-this._container.width / 2), (-this._container.height / 2));
+      
+      this._ctx.moveTo((-this._resizeConstraint.side / 2) - this._ctx.lineWidth, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
+      
+      this._ctx.lineTo((this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2), (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
+      
+      this._ctx.lineTo((this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2), (this._resizeConstraint.side / 2  - this._ctx.lineWidth / 2));
+      
+      this._ctx.lineTo((-this._resizeConstraint.side / 2  - this._ctx.lineWidth), (this._resizeConstraint.side / 2  - this._ctx.lineWidth / 2));
+      
+      this._ctx.closePath();
+      this._ctx.fill('evenodd');
+      
+      //отрисовка сообщения с размером изображения
+      let widthImage = this._image.naturalWidth;
+      let hightImage = this._image.naturalHeight;
+      let msg = `${widthImage} x ${hightImage}`;
+      let msgY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth - 5;
+      let msgX = (widthImage > 1000) ? -74 : -58;
+      this._ctx.font = '25px Tahoma';
+      this._ctx.fillStyle = '#ffffff';
+      this._ctx.fillText(msg, msgX, msgY);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
