@@ -146,72 +146,77 @@
       
       //отрисовка зигзага
      
-      var startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
-      var startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
-      console.log(this._resizeConstraint.side);
+      let startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      let startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+    
       this._ctx.beginPath();
       this._ctx.moveTo(startX, startY);
       
-      var number = Math.floor(this._resizeConstraint.side / 10);
       
-       for (var n = 0; n < number; n++) {
-        var rightCornerX = startX + ((n + 1) * 10);
-        var rightCornerY;
-        if (n % 2 == 0) { // if n is even...
-          rightCornerY = startY + 6;
-        } else { // if n is odd...
-          rightCornerY = startY;
-        } 
-         this._ctx.lineTo(rightCornerX, rightCornerY);
-      }
-      this._ctx.stroke();
       
-      for (var m = 0; m < number; m++) {
-       
-       
-        var bottomCornerY = rightCornerY + ((m + 1) * 10);
-        var bottomCornerX;
-        if (m % 2 == 0) { // if n is even...
-          bottomCornerX = rightCornerX - 6;
-        } else { // if n is odd...
-          bottomCornerX = rightCornerX;
+      let number = Math.floor(this._resizeConstraint.side / 10);
+      let option;
+      let elem;
+      let currentX;
+      let currentY;
+      
+      function drawZigzag(pointX, pointY, elem, option) {
+        for (let n = 0; n < number; n++) {
+          let finalX;
+          let finalY;
+          switch(option) {
+            case 'right':
+              finalX = pointX + ((n + 1) * 10);
+              finalY;
+              if (n % 2 == 0) { // if n is even...
+                finalY = pointY + 6;
+              } else { // if n is odd...
+                finalY = pointY;
+              }
+              break;
+
+            case 'down':
+              finalY = pointY + ((n + 1) * 10);
+              finalX;
+              if (n % 2 == 0) { // if n is even...
+                finalX = pointX - 6;
+              } else { // if n is odd...
+                finalX = pointX;
+              }
+              break;
+
+            case 'left':
+              finalX = pointX - ((n + 1) * 10);
+              finalY;
+              if (n % 2 == 0) { // if n is even...
+                finalY = pointY - 6;
+              } else { // if n is odd...
+                finalY = pointY;
+              }
+              break;
+            case 'up':
+              finalY = pointY - ((n + 1) * 10);
+              finalX;
+              if (n % 2 == 0) { // if n is even...
+                finalX = pointX + 6;
+              } else { // if n is odd...
+                finalX = pointX;
+              }
+              break;
+          }  
+        
+          elem._ctx.lineTo(finalX, finalY);
+          currentX = finalX;
+          currentY = finalY;
         }
-        this._ctx.lineTo(bottomCornerX, bottomCornerY);
+        
+        elem._ctx.stroke();
       }
-      this._ctx.stroke();
       
-      for (var l = 0; l < number; l++) {
-        var leftCornerX = bottomCornerX - ((l + 1) * 10);
-        var leftCornerY;
-        if (l % 2 == 0) { // if n is even...
-          leftCornerY = bottomCornerY - 6;
-        } else { // if n is odd...
-          leftCornerY = bottomCornerY;
-        }
-        this._ctx.lineTo(leftCornerX, leftCornerY);
-      }
-      this._ctx.stroke();
-      
-      for (var f = 0; f < number; f++) {
-        var topCornerY = leftCornerY - ((f + 1) * 10);
-        var topCornerX;
-        if (f % 2 == 0) { // if n is even...
-          topCornerX = leftCornerX + 6;
-        } else { // if n is odd...
-          topCornerX = leftCornerX;
-        }
-        this._ctx.lineTo(topCornerX, topCornerY);
-      }
-      this._ctx.stroke();
-      
-      
-      
-      
-     
-      
-      
-      
-      
+      drawZigzag(startX, startY, this, 'right');
+      drawZigzag(currentX, currentY, this, 'down');
+      drawZigzag(currentX, currentY, this, 'left');
+      drawZigzag(currentX, currentY, this, 'up');
       
       //отрисовка сообщения с размером изображения
       let widthImage = this._image.naturalWidth;
