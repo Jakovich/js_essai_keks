@@ -94,9 +94,9 @@
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
-      //this._ctx.setLineDash([15, 10]);
+      this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      //this._ctx.lineDashOffset = 7;
+      this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -145,6 +145,11 @@
       this._ctx.fill('evenodd');
       
       //отрисовка зигзага
+      
+      // расстояние между соседними штрихами.
+      this._ctx.setLineDash([0, 0]);
+      // Смещение первого штриха от начала линии.
+      this._ctx.lineDashOffset = 0;
      
       let startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
       let startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
@@ -152,11 +157,19 @@
       this._ctx.beginPath();
       this._ctx.moveTo(startX, startY);
       
+      /** 
+       * @const
+       * @type {number}
+      */
+      const ZIGZAG_WIDTH = 10;
       
+      /** 
+       * @const
+       * @type {number}
+      */
+      const ZIGZAG_HEIGHT = 6;
       
-      let number = Math.floor(this._resizeConstraint.side / 10);
-      let option;
-      let elem;
+      let number = Math.floor(this._resizeConstraint.side / ZIGZAG_WIDTH);
       let currentX;
       let currentY;
       
@@ -166,39 +179,39 @@
           let finalY;
           switch(option) {
             case 'right':
-              finalX = pointX + ((n + 1) * 10);
+              finalX = pointX + ((n + 1) * ZIGZAG_WIDTH);
               finalY;
               if (n % 2 == 0) { // if n is even...
-                finalY = pointY + 6;
+                finalY = pointY + ZIGZAG_HEIGHT;
               } else { // if n is odd...
                 finalY = pointY;
               }
               break;
 
             case 'down':
-              finalY = pointY + ((n + 1) * 10);
+              finalY = pointY + ((n + 1) * ZIGZAG_WIDTH);
               finalX;
               if (n % 2 == 0) { // if n is even...
-                finalX = pointX - 6;
+                finalX = pointX - ZIGZAG_HEIGHT;
               } else { // if n is odd...
                 finalX = pointX;
               }
               break;
 
             case 'left':
-              finalX = pointX - ((n + 1) * 10);
+              finalX = pointX - ((n + 1) * ZIGZAG_WIDTH);
               finalY;
               if (n % 2 == 0) { // if n is even...
-                finalY = pointY - 6;
+                finalY = pointY - ZIGZAG_HEIGHT;
               } else { // if n is odd...
                 finalY = pointY;
               }
               break;
             case 'up':
-              finalY = pointY - ((n + 1) * 10);
+              finalY = pointY - ((n + 1) * ZIGZAG_WIDTH);
               finalX;
               if (n % 2 == 0) { // if n is even...
-                finalX = pointX + 6;
+                finalX = pointX + ZIGZAG_HEIGHT;
               } else { // if n is odd...
                 finalX = pointX;
               }
@@ -217,6 +230,8 @@
       drawZigzag(currentX, currentY, this, 'down');
       drawZigzag(currentX, currentY, this, 'left');
       drawZigzag(currentX, currentY, this, 'up');
+      
+      this._ctx.closePath();
       
       //отрисовка сообщения с размером изображения
       let widthImage = this._image.naturalWidth;
