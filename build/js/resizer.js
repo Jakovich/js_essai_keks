@@ -115,6 +115,7 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
+      //закомментировано, чтобы отрисовать рамку зигзагом
       /*this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
@@ -150,7 +151,7 @@
       this._ctx.setLineDash([0, 0]);
       // Смещение первого штриха от начала линии.
       this._ctx.lineDashOffset = 0;
-     
+      //начальные точки отрисовки рамки
       let startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
       let startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
     
@@ -169,12 +170,21 @@
       */
       const ZIGZAG_HEIGHT = 6;
       
-      let number = Math.floor(this._resizeConstraint.side / ZIGZAG_WIDTH);
+      //определяет кол-во циклов, необходимых для отрисовки зигзага
+      this.number = Math.ceil(this._resizeConstraint.side / ZIGZAG_WIDTH);
+      
+      /**
+        * текущее положение конченой точки зигзага
+        * @type {number}
+      */
       let currentX;
       let currentY;
       
-      function drawZigzag(pointX, pointY, elem, option) {
-        for (let n = 0; n < number; n++) {
+      /**
+        
+      */
+      this.drawZigzag = function(pointX, pointY, option) {
+        for (let n = 0; n < this.number; n++) {
           let finalX;
           let finalY;
           switch(option) {
@@ -218,18 +228,18 @@
               break;
           }  
         
-          elem._ctx.lineTo(finalX, finalY);
+          this._ctx.lineTo(finalX, finalY);
           currentX = finalX;
           currentY = finalY;
         }
         
-        elem._ctx.stroke();
-      }
+        this._ctx.stroke();
+      };
       
-      drawZigzag(startX, startY, this, 'right');
-      drawZigzag(currentX, currentY, this, 'down');
-      drawZigzag(currentX, currentY, this, 'left');
-      drawZigzag(currentX, currentY, this, 'up');
+      this.drawZigzag(startX, startY, 'right');
+      this.drawZigzag(currentX, currentY, 'down');
+      this.drawZigzag(currentX, currentY, 'left');
+      this.drawZigzag(currentX, currentY, 'up');
       
       this._ctx.closePath();
       
