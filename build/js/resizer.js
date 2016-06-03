@@ -181,7 +181,8 @@
       let currentY;
       
       /**
-        
+        *Отрисовывыет линию с начиная с указанных позиций в определенном направлении
+        *drawZigzag(pointX:number, pointY:number, option:string)
       */
       this.drawZigzag = function(pointX, pointY, option) {
         for (let n = 0; n < this.number; n++) {
