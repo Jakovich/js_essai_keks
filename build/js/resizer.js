@@ -89,14 +89,14 @@
       // чего-либо с другой обводкой.
 
       // Толщина линии.
-      this._ctx.lineWidth = 6;
+      this._ctx.lineWidth = 3;
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
-      this._ctx.setLineDash([15, 10]);
+      //this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+      //this._ctx.lineDashOffset = 7;
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -115,14 +115,11 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
+      /*this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
-      
-      var startPoint;
-      
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
       //отрисовка затемненной области
       this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
       this._ctx.beginPath();
@@ -146,6 +143,75 @@
       this._ctx.closePath();
       
       this._ctx.fill('evenodd');
+      
+      //отрисовка зигзага
+     
+      var startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      var startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      console.log(this._resizeConstraint.side);
+      this._ctx.beginPath();
+      this._ctx.moveTo(startX, startY);
+      
+      var number = Math.floor(this._resizeConstraint.side / 10);
+      
+       for (var n = 0; n < number; n++) {
+        var rightCornerX = startX + ((n + 1) * 10);
+        var rightCornerY;
+        if (n % 2 == 0) { // if n is even...
+          rightCornerY = startY + 6;
+        } else { // if n is odd...
+          rightCornerY = startY;
+        } 
+         this._ctx.lineTo(rightCornerX, rightCornerY);
+      }
+      this._ctx.stroke();
+      
+      for (var m = 0; m < number; m++) {
+       
+       
+        var bottomCornerY = rightCornerY + ((m + 1) * 10);
+        var bottomCornerX;
+        if (m % 2 == 0) { // if n is even...
+          bottomCornerX = rightCornerX - 6;
+        } else { // if n is odd...
+          bottomCornerX = rightCornerX;
+        }
+        this._ctx.lineTo(bottomCornerX, bottomCornerY);
+      }
+      this._ctx.stroke();
+      
+      for (var l = 0; l < number; l++) {
+        var leftCornerX = bottomCornerX - ((l + 1) * 10);
+        var leftCornerY;
+        if (l % 2 == 0) { // if n is even...
+          leftCornerY = bottomCornerY - 6;
+        } else { // if n is odd...
+          leftCornerY = bottomCornerY;
+        }
+        this._ctx.lineTo(leftCornerX, leftCornerY);
+      }
+      this._ctx.stroke();
+      
+      for (var f = 0; f < number; f++) {
+        var topCornerY = leftCornerY - ((f + 1) * 10);
+        var topCornerX;
+        if (f % 2 == 0) { // if n is even...
+          topCornerX = leftCornerX + 6;
+        } else { // if n is odd...
+          topCornerX = leftCornerX;
+        }
+        this._ctx.lineTo(topCornerX, topCornerY);
+      }
+      this._ctx.stroke();
+      
+      
+      
+      
+     
+      
+      
+      
+      
       
       //отрисовка сообщения с размером изображения
       let widthImage = this._image.naturalWidth;
