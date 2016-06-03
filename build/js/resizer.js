@@ -121,24 +121,30 @@
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
       
+      var startPoint;
+      
       //отрисовка затемненной области
       this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
       this._ctx.beginPath();
+      
+      let innerStep = this._resizeConstraint.side / 2;
+      let widthLine = this._ctx.lineWidth;
+      
+        //внешний прямоугольник
       this._ctx.moveTo((-this._container.width / 2), (-this._container.height / 2));
       this._ctx.lineTo((-this._container.width / 2), this._container.height);
       this._ctx.lineTo((this._container.width), this._container.height);
       this._ctx.lineTo((this._container.width), -this._container.height);
       this._ctx.lineTo((-this._container.width / 2), (-this._container.height / 2));
       
-      this._ctx.moveTo((-this._resizeConstraint.side / 2) - this._ctx.lineWidth, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
-      
-      this._ctx.lineTo((this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2), (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
-      
-      this._ctx.lineTo((this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2), (this._resizeConstraint.side / 2  - this._ctx.lineWidth / 2));
-      
-      this._ctx.lineTo((-this._resizeConstraint.side / 2  - this._ctx.lineWidth), (this._resizeConstraint.side / 2  - this._ctx.lineWidth / 2));
-      
+        //внутренний прямоугольник
+      this._ctx.moveTo(-innerStep - widthLine, -innerStep - widthLine);
+      this._ctx.lineTo(innerStep - widthLine / 2, -innerStep - widthLine); 
+      this._ctx.lineTo(innerStep - widthLine / 2, innerStep  - widthLine / 2);  
+      this._ctx.lineTo(-innerStep  - widthLine,innerStep  - widthLine / 2);
+     
       this._ctx.closePath();
+      
       this._ctx.fill('evenodd');
       
       //отрисовка сообщения с размером изображения
