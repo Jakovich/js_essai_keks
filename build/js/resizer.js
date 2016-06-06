@@ -14,6 +14,20 @@
   */
   const ZIGZAG_HEIGHT = 6;
   
+  /** 
+   * @const
+   * @type {number}
+  */
+  
+  const LINE_WIDTH = 3;
+  
+  /** 
+   * @const
+   * @type {number}
+  */
+  
+  const LINE_OFFSET = 7;
+  
   /**
    * @constructor
    * @param {string} image
@@ -104,14 +118,14 @@
       // чего-либо с другой обводкой.
 
       // Толщина линии.
-      this._ctx.lineWidth = 3;
+      this._ctx.lineWidth = LINE_WIDTH;
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
       this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+      this._ctx.lineDashOffset = LINE_OFFSET;
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -141,7 +155,6 @@
       this._ctx.beginPath();
       
       let innerStep = this._resizeConstraint.side / 2;
-      let widthLine = this._ctx.lineWidth;
       
         //внешний прямоугольник
       this._ctx.moveTo((-this._container.width / 2), (-this._container.height / 2));
@@ -151,10 +164,10 @@
       this._ctx.lineTo((-this._container.width / 2), (-this._container.height / 2));
       
         //внутренний прямоугольник
-      this._ctx.moveTo(-innerStep - widthLine, -innerStep - widthLine);
-      this._ctx.lineTo(innerStep - widthLine / 2, -innerStep - widthLine); 
-      this._ctx.lineTo(innerStep - widthLine / 2, innerStep  - widthLine / 2);  
-      this._ctx.lineTo(-innerStep  - widthLine,innerStep  - widthLine / 2);
+      this._ctx.moveTo(-innerStep - LINE_WIDTH, -innerStep -LINE_WIDTH);
+      this._ctx.lineTo(innerStep - LINE_WIDTH / 2, -innerStep - LINE_WIDTH); 
+      this._ctx.lineTo(innerStep - LINE_WIDTH / 2, innerStep  - LINE_WIDTH / 2);  
+      this._ctx.lineTo(-innerStep  - LINE_WIDTH,innerStep  - LINE_WIDTH / 2);
      
       this._ctx.closePath();
       
@@ -164,8 +177,7 @@
       
       // расстояние между соседними штрихами.
       this._ctx.setLineDash([0, 0]);
-      // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 0;
+      
       //начальные точки отрисовки рамки
       let startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
       let startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
