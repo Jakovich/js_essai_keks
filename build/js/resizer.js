@@ -1,12 +1,27 @@
 'use strict';
 
 (function() {
+  
+  /** 
+    * @const
+    * @type {number}
+  */
+  const ZIGZAG_WIDTH = 10;
+      
+  /** 
+   * @const
+   * @type {number}
+  */
+  const ZIGZAG_HEIGHT = 6;
+  
   /**
    * @constructor
    * @param {string} image
-   */
+  */
+  
   var Resizer = function(image) {
     // Изображение, с которым будет вестись работа.
+    
     this._image = new Image();
     this._image.src = image;
 
@@ -157,18 +172,6 @@
     
       this._ctx.beginPath();
       this._ctx.moveTo(startX, startY);
-      
-      /** 
-       * @const
-       * @type {number}
-      */
-      const ZIGZAG_WIDTH = 10;
-      
-      /** 
-       * @const
-       * @type {number}
-      */
-      const ZIGZAG_HEIGHT = 6;
       
       //определяет кол-во циклов, необходимых для отрисовки зигзага
       this.number = Math.ceil(this._resizeConstraint.side / ZIGZAG_WIDTH);
