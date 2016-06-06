@@ -1,12 +1,41 @@
 'use strict';
 
 (function() {
+  
+  /** 
+    * @const
+    * @type {number}
+  */
+  const ZIGZAG_WIDTH = 10;
+      
+  /** 
+   * @const
+   * @type {number}
+  */
+  const ZIGZAG_HEIGHT = 6;
+  
+  /** 
+   * @const
+   * @type {number}
+  */
+  
+  const LINE_WIDTH = 3;
+  
+  /** 
+   * @const
+   * @type {number}
+  */
+  
+  const LINE_OFFSET = 7;
+  
   /**
    * @constructor
    * @param {string} image
-   */
+  */
+  
   var Resizer = function(image) {
     // Изображение, с которым будет вестись работа.
+    
     this._image = new Image();
     this._image.src = image;
 
@@ -89,14 +118,14 @@
       // чего-либо с другой обводкой.
 
       // Толщина линии.
-      this._ctx.lineWidth = 6;
+      this._ctx.lineWidth = LINE_WIDTH;
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
       // расстояние между соседними штрихами.
       this._ctx.setLineDash([15, 10]);
       // Смещение первого штриха от начала линии.
-      this._ctx.lineDashOffset = 7;
+      this._ctx.lineDashOffset = LINE_OFFSET;
 
       // Сохранение состояния канваса.
       // Подробней см. строку 132.
@@ -104,6 +133,7 @@
 
       // Установка начальной точки системы координат в центр холста.
       this._ctx.translate(this._container.width / 2, this._container.height / 2);
+      
 
       var displX = -(this._resizeConstraint.x + this._resizeConstraint.side / 2);
       var displY = -(this._resizeConstraint.y + this._resizeConstraint.side / 2);
@@ -114,11 +144,130 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
+      //закомментировано, чтобы отрисовать рамку зигзагом
+      /*this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
+      //отрисовка затемненной области
+      this._ctx.fillStyle = 'rgba(0,0,0,0.8)';
+      this._ctx.beginPath();
+      
+      let innerStep = this._resizeConstraint.side / 2;
+      
+        //внешний прямоугольник
+      this._ctx.moveTo((-this._container.width / 2), (-this._container.height / 2));
+      this._ctx.lineTo((-this._container.width / 2), this._container.height);
+      this._ctx.lineTo((this._container.width), this._container.height);
+      this._ctx.lineTo((this._container.width), -this._container.height);
+      this._ctx.lineTo((-this._container.width / 2), (-this._container.height / 2));
+      
+        //внутренний прямоугольник
+      this._ctx.moveTo(-innerStep - LINE_WIDTH, -innerStep -LINE_WIDTH);
+      this._ctx.lineTo(innerStep - LINE_WIDTH / 2, -innerStep - LINE_WIDTH); 
+      this._ctx.lineTo(innerStep - LINE_WIDTH / 2, innerStep  - LINE_WIDTH / 2);  
+      this._ctx.lineTo(-innerStep  - LINE_WIDTH,innerStep  - LINE_WIDTH / 2);
+     
+      this._ctx.closePath();
+      
+      this._ctx.fill('evenodd');
+      
+      //отрисовка зигзага
+      
+      // расстояние между соседними штрихами.
+      this._ctx.setLineDash([0, 0]);
+      
+      //начальные точки отрисовки рамки
+      let startX = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+      let startY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2;
+    
+      this._ctx.beginPath();
+      this._ctx.moveTo(startX, startY);
+      
+      //определяет кол-во циклов, необходимых для отрисовки зигзага
+      this.number = Math.ceil(this._resizeConstraint.side / ZIGZAG_WIDTH);
+      
+      /**
+        * текущее положение конченой точки зигзага
+        * @type {number}
+      */
+      let currentX;
+      let currentY;
+      
+      /**
+        *Отрисовывыет линию с начиная с указанных позиций в определенном направлении
+        *drawZigzag(pointX:number, pointY:number, option:string)
+      */
+      this.drawZigzag = function(pointX, pointY, option) {
+        for (let n = 0; n < this.number; n++) {
+          let finalX;
+          let finalY;
+          switch(option) {
+            case 'right':
+              finalX = pointX + ((n + 1) * ZIGZAG_WIDTH);
+              finalY;
+              if (n % 2 == 0) { // if n is even...
+                finalY = pointY + ZIGZAG_HEIGHT;
+              } else { // if n is odd...
+                finalY = pointY;
+              }
+              break;
+
+            case 'down':
+              finalY = pointY + ((n + 1) * ZIGZAG_WIDTH);
+              finalX;
+              if (n % 2 == 0) { // if n is even...
+                finalX = pointX - ZIGZAG_HEIGHT;
+              } else { // if n is odd...
+                finalX = pointX;
+              }
+              break;
+
+            case 'left':
+              finalX = pointX - ((n + 1) * ZIGZAG_WIDTH);
+              finalY;
+              if (n % 2 == 0) { // if n is even...
+                finalY = pointY - ZIGZAG_HEIGHT;
+              } else { // if n is odd...
+                finalY = pointY;
+              }
+              break;
+            case 'up':
+              finalY = pointY - ((n + 1) * ZIGZAG_WIDTH);
+              finalX;
+              if (n % 2 == 0) { // if n is even...
+                finalX = pointX + ZIGZAG_HEIGHT;
+              } else { // if n is odd...
+                finalX = pointX;
+              }
+              break;
+          }  
+        
+          this._ctx.lineTo(finalX, finalY);
+          currentX = finalX;
+          currentY = finalY;
+        }
+        
+        this._ctx.stroke();
+      };
+      
+      this.drawZigzag(startX, startY, 'right');
+      this.drawZigzag(currentX, currentY, 'down');
+      this.drawZigzag(currentX, currentY, 'left');
+      this.drawZigzag(currentX, currentY, 'up');
+      
+      this._ctx.closePath();
+      
+      //отрисовка сообщения с размером изображения
+      let widthImage = this._image.naturalWidth;
+      let hightImage = this._image.naturalHeight;
+      let msg = `${widthImage} x ${hightImage}`;
+      let msgY = (-this._resizeConstraint.side / 2) - this._ctx.lineWidth - 5;
+      let msgX = (widthImage > 1000) ? -74 : -58;
+      this._ctx.font = '25px Tahoma';
+      this._ctx.fillStyle = '#ffffff';
+      this._ctx.fillText(msg, msgX, msgY);
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
