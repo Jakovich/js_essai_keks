@@ -11,14 +11,22 @@
   "bugs": {
     "url": "https://github.com/Jakovich/js_essai_keks/issues"
   },
-
   "devDependencies": {
-    "eslint": "2.4.0"
+    "babel-core": "^6.9.1",
+    "babel-loader": "^6.2.4",
+    "eslint": "2.4.0",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
-    "test": "eslint build/js"
+    "build": "webpack --config webpack.config.js",
+    "test": "eslint src",
+    "start": "webpack-dev-server --watch --config webpack.config.js"
   },
   "engines": {
     "node": "^5.0.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.9.1"
   }
 }

@@ -465,4 +465,5 @@
   };
 
   window.Resizer = Resizer;
+  
 })();
