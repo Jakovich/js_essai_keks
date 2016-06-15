@@ -290,8 +290,12 @@
   function checkValid() {
     if (validCondition()) {
       submitButton.removeAttribute('disabled');
+      if (resizeForm.lastChild.className == 'error') {
+        resizeForm.removeChild(resizeForm.lastChild);
+      }
     } else {
       submitButton.setAttribute('disabled', true);
+      errorMsg();
     }
   }
  
@@ -307,6 +311,19 @@
 
    return result;
  }
+  
+  function errorMsg() {
+    var msg = document.createElement('span');
+    msg.style.display = 'block';
+    msg.style.color = 'red';
+    msg.style.position = 'absolute';
+    msg.style.left = '100px';
+    msg.style.bottom = '0px';
+    msg.style.zIndex = '100';
+    msg.innerHTML = '«кадр» должен находиться в пределах исходного изображения';
+    msg.className = 'error';
+    resizeForm.appendChild(msg);
+  }
   
   cleanupResizer();
   updateBackground();
