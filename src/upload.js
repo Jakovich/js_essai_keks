@@ -255,25 +255,17 @@
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
   
-  
-    
-  
-  
-  
 
   //валидация формы
   
-  var resizeForm = document.querySelector('#upload-resize');
+  let resizeX = resizeForm['x'];
   
-  var resizeX = resizeForm['x'];
+  let resizeY = resizeForm['y'];
   
-  var resizeY = resizeForm['y'];
+  let resizeSize = resizeForm['size'];
   
-  var resizeSize = resizeForm['size'];
+  let submitButton = resizeForm.querySelector('#resize-fwd');
   
-  var submitButton = resizeForm.querySelector('#resize-fwd');
-  
- 
   
   resizeX.oninput = function() {
     checkValid();
@@ -287,8 +279,13 @@
     checkValid();
   };
   
-  function checkValid() {
-    if (validCondition()) {
+  let checkValid = () => {
+    let valueX = parseInt(resizeX.value, 10);
+    let valueY = parseInt(resizeY.value, 10);
+    let valueSize = parseInt(resizeSize.value, 10);  
+   
+   
+    if (validCondition(valueX, valueY, valueSize)) {
       submitButton.removeAttribute('disabled');
       if (resizeForm.lastChild.className == 'error') {
         resizeForm.removeChild(resizeForm.lastChild);
@@ -297,22 +294,12 @@
       submitButton.setAttribute('disabled', true);
       errorMsg();
     }
-  }
- 
- function validCondition() {
-   var valueX = parseInt(resizeX.value, 10);
-   var valueY = parseInt(resizeY.value, 10);
-   var valueSize = parseInt(resizeSize.value, 10);
-   
-   var result = valueX >= 0 
-   && valueY >= 0
-   && (valueX + valueSize) <= currentResizer._image.naturalWidth
-   && (valueY + valueSize) <= currentResizer._image.naturalHeight;
-
-   return result;
- }
+  };
   
-  function errorMsg() {
+  
+  let validCondition = (val1, val2, val3) => val1 >= 0 && val2 >= 0 && (val1 + val3) <= currentResizer._image.naturalWidth && (val2 + val3) <= currentResizer._image.naturalHeight;
+  
+  let errorMsg = () => {
     var msg = document.createElement('span');
     msg.style.display = 'block';
     msg.style.color = 'red';
@@ -323,7 +310,7 @@
     msg.innerHTML = '«кадр» должен находиться в пределах исходного изображения';
     msg.className = 'error';
     resizeForm.appendChild(msg);
-  }
+  };
   
   cleanupResizer();
   updateBackground();
