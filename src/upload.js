@@ -160,6 +160,7 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
+          checkValid();
         };
 
         fileReader.readAsDataURL(element.files[0]);
@@ -253,7 +254,60 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+  
+  
+    
+  
+  
+  
 
+  //валидация формы
+  
+  var resizeForm = document.querySelector('#upload-resize');
+  
+  var resizeX = resizeForm['x'];
+  
+  var resizeY = resizeForm['y'];
+  
+  var resizeSize = resizeForm['size'];
+  
+  var submitButton = resizeForm.querySelector('#resize-fwd');
+  
+ 
+  
+  resizeX.oninput = function() {
+    checkValid();
+   };
+  
+  resizeY.oninput = function() {
+    checkValid();
+  };
+  
+  resizeSize.oninput = function() {
+    checkValid();
+  };
+  
+  function checkValid() {
+    if (validCondition()) {
+      submitButton.removeAttribute('disabled');
+    } else {
+      submitButton.setAttribute('disabled', true);
+    }
+  }
+ 
+ function validCondition() {
+   var valueX = parseInt(resizeX.value, 10);
+   var valueY = parseInt(resizeY.value, 10);
+   var valueSize = parseInt(resizeSize.value, 10);
+   
+   var result = valueX >= 0 
+   && valueY >= 0
+   && (valueX + valueSize) <= currentResizer._image.naturalWidth
+   && (valueY + valueSize) <= currentResizer._image.naturalHeight;
+
+   return result;
+ }
+  
   cleanupResizer();
   updateBackground();
 })();
