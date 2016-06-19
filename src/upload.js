@@ -239,7 +239,7 @@
     @return {number}
   */
   
-  function setTimeofExpires () {
+  let setTimeofExpires = () => {
     let currentDate = new Date();
     let currentYear = currentDate.getFullYear();
     let birthDate = new Date(currentYear, 2, 6);
@@ -249,7 +249,7 @@
     let expireDateMilisec = currentDate - birthDate;;
     let expireDate = Math.floor(expireDateMilisec / 3600 / 24 / 1000);
     return expireDate;
-  }
+  };
   
 
   /**
