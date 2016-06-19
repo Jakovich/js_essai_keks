@@ -160,7 +160,10 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
+          checkValid();
         };
+        
+        
 
         fileReader.readAsDataURL(element.files[0]);
       } else {
@@ -253,7 +256,101 @@
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
   };
+  
 
+  //валидация формы
+  
+  /**
+  @type {Element}
+  */
+  let resizeX = resizeForm['x'];
+  
+  /**
+  @type {Element}
+  */
+  let resizeY = resizeForm['y'];
+  
+  /**
+  @type {Element}
+  */
+  let resizeSize = resizeForm['size'];
+  
+  /**
+  @type {Element}
+  */
+  let submitButton = resizeForm.querySelector('#resize-fwd');
+  
+  /**
+   *Обрабочики изменения значения полей формы
+  */
+  resizeX.oninput = function() {
+    checkValid();
+   };
+  
+  resizeY.oninput = function() {
+    checkValid();
+  };
+  
+  resizeSize.oninput = function() {
+    checkValid();
+  };
+  
+  /**
+   *Функция проверки валидности полей формы и добавления атрибута disabled
+   *конпке отправки форма и вывода сообщения об ошибки
+  */
+  let checkValid = () => {
+    /**
+      @type {number}
+    */
+    let valueX = parseInt(resizeX.value, 10);
+    /**
+      @type {number}
+    */
+    let valueY = parseInt(resizeY.value, 10);
+    /**
+      @type {number}
+    */
+    let valueSize = parseInt(resizeSize.value, 10);  
+    if (validCondition(valueX, valueY, valueSize)) {
+      submitButton.removeAttribute('disabled');
+      if (resizeForm.lastChild.className === 'error') {
+        resizeForm.removeChild(resizeForm.lastChild);
+      }
+    } else {
+      submitButton.setAttribute('disabled', true);
+      if (!(resizeForm.lastChild.className === 'error')) {
+        errorMsg();
+      }
+    }
+  };
+  
+  /**
+   *функция проверки условий валидности
+   @parametr {number} val1
+   @parametr {number} val2
+   @parametr {number} val3
+   @return {boolean}
+  */
+  let validCondition = (val1, val2, val3) => val1 >= 0 && val2 >= 0 && (val1 + val3) <= currentResizer._image.naturalWidth && (val2 + val3) <= currentResizer._image.naturalHeight;
+  
+  /**
+   *функция формирования сообщения об ошибки
+  */
+  
+  let errorMsg = () => {
+    var msg = document.createElement('span');
+    msg.style.display = 'block';
+    msg.style.color = 'red';
+    msg.style.position = 'absolute';
+    msg.style.left = '100px';
+    msg.style.bottom = '0px';
+    msg.style.zIndex = '100';
+    msg.innerHTML = '«кадр» должен находиться в пределах исходного изображения';
+    msg.className = 'error';
+    resizeForm.appendChild(msg);
+  };
+  
   cleanupResizer();
   updateBackground();
 })();

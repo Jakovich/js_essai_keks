@@ -335,6 +335,11 @@ input[type=radio]:checked + .upload-filter-label {
   vertical-align: middle;
 }
 
+.upload-form-controls-fwd[disabled='true'] {
+  background-color: grey;
+  cursor: text;
+}
+
 .pictures {
   width: 980px;
   margin: 0 auto;
