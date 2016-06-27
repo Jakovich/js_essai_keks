@@ -8,6 +8,9 @@
 'use strict';
 
 (function() {
+  
+  let browserCookies = require('browser-cookies');
+  
   /** @enum {string} */
   var FileType = {
     'GIF': '',
@@ -215,6 +218,36 @@
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
   };
+  
+  /**
+  @type {Element}
+  */
+  let filterChoice = filterForm['upload-filter'];
+  
+  filterChoice.value = browserCookies.get('filter') || '';
+  
+  filterMap = {
+    'none': 'filter-none',
+    'chrome': 'filter-chrome',
+    'sepia': 'filter-sepia'
+  };
+  
+  filterImage.className = 'filter-image-preview ' + filterMap[filterChoice.value];
+  
+  /**
+    функция установки даты жизни cookies - количество дней, прошедших с дня рождения (06.03)
+    @return {number}
+  */
+  
+  let setTimeofExpires = () => {
+    let currentDate = new Date();
+    let currentYear = currentDate.getFullYear();
+    let birthDate = (currentDate <= new Date(currentYear, 2, 6)) ? new Date(currentYear - 1, 2, 6) : new Date(currentYear, 2, 6);
+    let expireDateMilisec = currentDate - birthDate;
+    let expireDate = Math.floor(expireDateMilisec / 3600 / 24 / 1000);
+    return expireDate;
+  };
+  
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -255,6 +288,17 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
+    
+    /**
+    @type {number}
+    */
+    let expireDateValue = setTimeofExpires ();
+    /**
+      запись в cookies последнего выбранного значения
+    */
+    browserCookies.set('filter', filterChoice.value, {
+      expires: expireDateValue
+    });
   };
   
 
@@ -350,6 +394,8 @@
     msg.className = 'error';
     resizeForm.appendChild(msg);
   };
+  
+  
   
   cleanupResizer();
   updateBackground();
