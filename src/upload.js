@@ -242,11 +242,8 @@
   let setTimeofExpires = () => {
     let currentDate = new Date();
     let currentYear = currentDate.getFullYear();
-    let birthDate = new Date(currentYear, 2, 6);
-    if (currentDate <= birthDate) {
-      birthDate = new Date(currentYear - 1, 2, 6);
-    }
-    let expireDateMilisec = currentDate - birthDate;;
+    let birthDate = (currentDate <= new Date(currentYear, 2, 6)) ? new Date(currentYear - 1, 2, 6) : new Date(currentYear, 2, 6);
+    let expireDateMilisec = currentDate - birthDate;
     let expireDate = Math.floor(expireDateMilisec / 3600 / 24 / 1000);
     return expireDate;
   };
