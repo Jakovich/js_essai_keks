@@ -55,7 +55,7 @@
   * @param {function} callback
  */
   
-  let getJSONP = (address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = 'window.__picturesLoadCallback') => {
+  let getJSONP = (address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = window.__picturesLoadCallback) => {
     let scriptFunct = document.createElement('script');
     scriptFunct.src = address;
     let currentScript = document.currentScript;
@@ -69,9 +69,7 @@
   */
   
   window.__picturesLoadCallback = (data) => {
-    var pictures = [];
-    pictures = data;
-    pictures.forEach(function(picture) {
+    data.forEach(function(picture) {
       getPictureElement(picture, picturesContainer);
     });
   };
