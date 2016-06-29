@@ -17,13 +17,13 @@
   
   
   /**
- * @param {Object} data
- * @param {HTMLElement} container
- * @return {HTMLElement}
+  * @param {Object} data
+  * @param {HTMLElement} container
+  * @return {HTMLElement}
  */
   
-  let getPictureElement = function({url, likes, comments}, container) {
-    var element = elementToClone.cloneNode(true);
+  let getPictureElement = ({url, likes, comments}, container) => {
+    let element = elementToClone.cloneNode(true);
     element.querySelector('.picture-comments').textContent = comments;
     element.querySelector('.picture-likes').textContent = likes;
     
@@ -34,7 +34,7 @@
       element.classList.add('picture-load-failure');
     }, 10000);
     
-    pictureItem.onload = function() {
+    pictureItem.onload = () => {
       clearTimeout(imageLoadTimeout);
       let pictureElement = element.querySelector('img');
       pictureElement.src = pictureItem.src;
@@ -42,29 +42,33 @@
       pictureElement.height = 182;
     };
     
-    pictureItem.onerror = function() {
-      element.classList.add('picture-load-failure');
-    }
+    pictureItem.onerror = () => element.classList.add('picture-load-failure');
     
     pictureItem.src = url;
-    
     
     container.appendChild(element);
     return element;
   };
   
-  let getJSONP = function(address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = 'window.__picturesLoadCallback') {
-   
+  /**
+  * @param {string} address
+  * @param {function} callback
+ */
+  
+  let getJSONP = (address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = 'window.__picturesLoadCallback') => {
     let scriptFunct = document.createElement('script');
     scriptFunct.src = address;
     let currentScript = document.currentScript;
     document.body.insertBefore(scriptFunct, currentScript);
-    scriptFunct.onload = function() {
-      callback();
-    }
+    scriptFunct.onload = () => callback(); 
   };
   
-  window.__picturesLoadCallback = function(data) {
+  
+  /**
+  * @param {Object} data
+  */
+  
+  window.__picturesLoadCallback = (data) => {
     var pictures = [];
     pictures = data;
     pictures.forEach(function(picture) {
