@@ -1,6 +1,7 @@
 'use strict';
 
 (function() {
+  
   let filterBlock = document.querySelector('.filters');
   let templateElement = document.querySelector('#picture-template');
   let pictures = window.pictures;
@@ -13,16 +14,18 @@
   
   let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
   
+  
+  
   /**
  * @param {Object} data
  * @param {HTMLElement} container
  * @return {HTMLElement}
  */
   
-  let getPictureElement = function(data, container) {
+  let getPictureElement = function({url, likes, comments}, container) {
     var element = elementToClone.cloneNode(true);
-    element.querySelector('.picture-comments').textContent = data.comments;
-    element.querySelector('.picture-likes').textContent = data.likes;
+    element.querySelector('.picture-comments').textContent = comments;
+    element.querySelector('.picture-likes').textContent = likes;
     
     let pictureItem = new Image();
     
@@ -43,16 +46,33 @@
       element.classList.add('picture-load-failure');
     }
     
-    pictureItem.src = data.url;
+    pictureItem.src = url;
     
     
     container.appendChild(element);
     return element;
   };
   
-  pictures.forEach(function(picture) {
-    getPictureElement(picture, picturesContainer);
-  });
+  let getJSONP = function(address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = 'window.__picturesLoadCallback') {
+   
+    let scriptFunct = document.createElement('script');
+    scriptFunct.src = address;
+    let currentScript = document.currentScript;
+    document.body.insertBefore(scriptFunct, currentScript);
+    scriptFunct.onload = function() {
+      callback();
+    }
+  };
+  
+  window.__picturesLoadCallback = function(data) {
+    var pictures = [];
+    pictures = data;
+    pictures.forEach(function(picture) {
+      getPictureElement(picture, picturesContainer);
+    });
+  };
+  
+  getJSONP();
   
   if (filterBlock.classList.contains('invisible')) {
     filterBlock.classList.remove('invisible');
