@@ -4,7 +4,10 @@
   
   let filterBlock = document.querySelector('.filters');
   let templateElement = document.querySelector('#picture-template');
-  let pictures = window.pictures;
+  
+  let pictures;
+  
+  const PICTURES_LOAD_URL = '//o0.github.io/assets/json/pictures.json';
   
   let picturesContainer = document.querySelector('.pictures');
   
@@ -50,31 +53,63 @@
     return element;
   };
   
-  /**
-  * @param {string} address
-  * @param {function} callback
- */
   
-  let getJSONP = (address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = window.__picturesLoadCallback) => {
-    let scriptFunct = document.createElement('script');
-    scriptFunct.src = address;
-    let currentScript = document.currentScript;
-    document.body.insertBefore(scriptFunct, currentScript);
-    scriptFunct.onload = () => callback(); 
+  /** @param {function(Array.<Object>)} callback */
+  let getPictures = function(callback) {
+    let xhr = new XMLHttpRequest();
+    xhr.timeout = 10000;
+    
+    xhr.onloadstart = () => picturesContainer.classList.add('pictures-loading');
+    
+    xhr.onerror = () => {
+      picturesContainer.classList.remove('pictures-loading');
+      picturesContainer.classList.add('pictures-failure');
+    }
+    
+    xhr.ontimeout = xhr.onerror;
+    
+    /** @param {ProgressEvent} */
+    xhr.onload = (evt) => {
+      picturesContainer.classList.remove('pictures-loading');
+      
+      if(filterBlock.classList.contains('hidden')) {
+        filterBlock.classList.remove('hidden')
+      }
+      
+      let loadedData = JSON.parse(evt.target.response);
+      callback(loadedData);
+    };
+
+    xhr.open('GET', PICTURES_LOAD_URL);
+    xhr.send();
+  };
+  
+  let setFilterEnabled = (filter) => {
+    
+  }
+  
+  let setFiltrationEnabled = () => {
+    let filtres = filterBlock.querySelectorAll('.filters-radio');
+    for (var i = 0; i < filtres.length; i++) {
+      filtres[i].addEventListener('click', function() {
+        setFilterEnabled(this.id);
+      })
+    }
   };
   
   
-  /**
-  * @param {Object} data
-  */
-  
-  window.__picturesLoadCallback = (data) => {
-    data.forEach(function(picture) {
+  /** @param {Array.<Object>} pictures */
+  let renderPictures = (pictures) => {
+    pictures.forEach(function(picture) {
       getPictureElement(picture, picturesContainer);
     });
   };
   
-  getJSONP();
+  getPictures(function(loadedPictures){
+    pictures = loadedPictures;
+    setFiltrationEnabled();
+    renderPictures(pictures);
+  });
   
   if (filterBlock.classList.contains('invisible')) {
     filterBlock.classList.remove('invisible');
