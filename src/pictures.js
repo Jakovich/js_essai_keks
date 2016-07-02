@@ -62,7 +62,7 @@
   
   
   /** @param {function(Array.<Object>)} callback */
-  let getPictures = function(callback) {
+  let getPictures = (callback) => {
     let xhr = new XMLHttpRequest();
     xhr.timeout = 10000;
     
@@ -134,6 +134,7 @@
       break;   
     }
     
+    //вывод сообщения в случае, если ни один элемент не соответствует фильтру
     if (picturesToFilter.length === 0) {
       let element = alertelementToClone.cloneNode(true);
       let filterLabel = document.querySelector('label[for=' + filter + ']');
@@ -153,6 +154,7 @@
     });
     
   };
+  
   /** @param {string} filter */
   let setFilterEnabled = (filter) => {
     let filteredPictures = getFilteredPictures(pictures, filter);
@@ -163,7 +165,9 @@
     let filtres = filterBlock.querySelectorAll('.filters-radio');
     
     for (var i = 0; i < filtres.length; i++) {
+      
       let filterId = filtres[i].getAttribute('id');
+      
       //создание надписи с кол-вом фотографий, подходящих под этот фильтр
       let filteredPictures = getFilteredPictures(pictures, filterId);
       let picturesQuantity = filteredPictures.length;
