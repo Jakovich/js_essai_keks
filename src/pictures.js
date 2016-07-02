@@ -161,10 +161,31 @@
   
   let setFiltrationEnabled = () => {
     let filtres = filterBlock.querySelectorAll('.filters-radio');
+    
     for (var i = 0; i < filtres.length; i++) {
+      let filterId = filtres[i].getAttribute('id');
+      //создание надписи с кол-вом фотографий, подходящих под этот фильтр
+      let filteredPictures = getFilteredPictures(pictures, filterId);
+      let picturesQuantity = filteredPictures.length;
+      
+      //добавление disabled фильтрам, которым не соответствует ни одна фоо
+      if (picturesQuantity === 0) {
+        filtres[i].setAttribute('disabled', true);
+      }
+      
+      let infoSup = document.createElement('sup');
+      infoSup.innerHTML = picturesQuantity;
+      let filterLabel = document.querySelector('label[for=' + filterId + ']');
+      let next = filterLabel.nextSibling;
+      filterBlock.insertBefore(infoSup, next);
+   
       filtres[i].addEventListener('click', function() {
         setFilterEnabled(this.id);
       })
+    }
+    
+    if (filterBlock.classList.contains('invisible')) {
+      filterBlock.classList.remove('invisible');
     }
     
   };
@@ -174,10 +195,6 @@
     setFiltrationEnabled();
     renderPictures(pictures);
   });
-  
-  if (filterBlock.classList.contains('invisible')) {
-    filterBlock.classList.remove('invisible');
-  }
   
   
 })();
