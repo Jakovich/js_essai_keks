@@ -9,6 +9,13 @@
   
   const PICTURES_LOAD_URL = '//o0.github.io/assets/json/pictures.json';
   
+  /** @enum {number} */
+  var FILTER = {
+    'LIKES': 'filter-popular',
+    'NEWS': 'filter-new',
+    'DISCUSSED': 'filter-discussed',
+  };
+  
   let picturesContainer = document.querySelector('.pictures');
   
   if (!(filterBlock.classList.contains('invisible'))) {
@@ -84,9 +91,73 @@
     xhr.send();
   };
   
-  let setFilterEnabled = (filter) => {
+  
+  /**
+  * @param {Array.<Object>} hotels
+  * @param {string} filter
+ */
+  let getFilteredPictures = (pictures, filter) => {
+    let filterChilds = filterBlock.children;
     
-  }
+    for (var i = 0; i < filterChilds.length; i++) {
+      if (filterChilds[i].matches('.alert')) {
+        filterBlock.removeChild(filterChilds[i]);
+      }
+    }
+    
+    let alertTemplate = document.querySelector('#alert-template');
+    let alertelementToClone = ('content' in alertTemplate) ? alertTemplate.content.querySelector('.alert') : alertTemplate.querySelector('.alert');
+   
+    let picturesToFilter = pictures.slice(0);
+    let currentPeriod = new Date() - 4 * 24 * 60 * 60 * 1000; //4 дня - период показа при выборе фильтра "недавние"
+    switch(filter) {
+      case FILTER.LIKES:
+        picturesToFilter.sort(function(a, b) {
+          return b.likes - a.likes;
+        })
+        
+      break;
+      case FILTER.DISCUSSED:
+        picturesToFilter.sort(function(a, b) {
+          return b.comments - a.comments;
+        })
+      break;
+        
+      case FILTER.NEWS: 
+        picturesToFilter = picturesToFilter.filter(function(a) {
+          return new Date(a.date) >= currentPeriod;
+        });
+        picturesToFilter.sort(function(a, b) {
+          return b.date - a.date;
+        });
+        
+      break;   
+    }
+    
+    if (picturesToFilter.length === 0) {
+      let element = alertelementToClone.cloneNode(true);
+      let filterLabel = document.querySelector('label[for=' + filter + ']');
+      element.querySelector('.filter-name').textContent = '"' + filterLabel.textContent + '"';
+      filterBlock.appendChild(element);
+    }
+    
+    return picturesToFilter;
+    
+  };
+  
+  /** @param {Array.<Object>} pictures */
+  let renderPictures = (pictures) => {
+    picturesContainer.innerHTML = '';
+    pictures.forEach(function(picture) {
+      getPictureElement(picture, picturesContainer);
+    });
+    
+  };
+  /** @param {string} filter */
+  let setFilterEnabled = (filter) => {
+    let filteredPictures = getFilteredPictures(pictures, filter);
+    renderPictures(filteredPictures);
+  };
   
   let setFiltrationEnabled = () => {
     let filtres = filterBlock.querySelectorAll('.filters-radio');
@@ -95,14 +166,7 @@
         setFilterEnabled(this.id);
       })
     }
-  };
-  
-  
-  /** @param {Array.<Object>} pictures */
-  let renderPictures = (pictures) => {
-    pictures.forEach(function(picture) {
-      getPictureElement(picture, picturesContainer);
-    });
+    
   };
   
   getPictures(function(loadedPictures){
