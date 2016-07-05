@@ -99,11 +99,12 @@
   let getFilteredPictures = (pictures, filter) => {
     let filterChilds = filterBlock.children;
     
-    for (var i = 0; i < filterChilds.length; i++) {
-      if (filterChilds[i].matches('.alert')) {
-        filterBlock.removeChild(filterChilds[i]);
+    //обращение к прототипу массива, для того, чтобы применить к коллекции методы массива
+    Array.prototype.forEach.call(filterChilds, function(item) {
+      if (item.classList.contains('alert')) {
+        filterBlock.removeChild(item);
       }
-    }
+    });
     
     let alertTemplate = document.querySelector('#alert-template');
     let alertelementToClone = ('content' in alertTemplate) ? alertTemplate.content.querySelector('.alert') : alertTemplate.querySelector('.alert');
@@ -112,24 +113,17 @@
     let currentPeriod = new Date() - 4 * 24 * 60 * 60 * 1000; //4 дня - период показа при выборе фильтра "недавние"
     switch(filter) {
       case FILTER.LIKES:
-        picturesToFilter.sort(function(a, b) {
-          return b.likes - a.likes;
-        })
+        picturesToFilter.sort((a, b) => b.likes - a.likes);
         
       break;
       case FILTER.DISCUSSED:
-        picturesToFilter.sort(function(a, b) {
-          return b.comments - a.comments;
-        })
+        picturesToFilter.sort((a, b) => b.comments - a.comments);
       break;
         
       case FILTER.NEWS: 
-        picturesToFilter = picturesToFilter.filter(function(a) {
-          return new Date(a.date) >= currentPeriod;
-        });
-        picturesToFilter.sort(function(a, b) {
-          return b.date - a.date;
-        });
+        picturesToFilter = picturesToFilter.filter((a) => new Date(a.date) >= currentPeriod);
+        
+        picturesToFilter.sort((a, b) => b.date - a.date);
         
       break;   
     }
@@ -137,7 +131,7 @@
     //вывод сообщения в случае, если ни один элемент не соответствует фильтру
     if (picturesToFilter.length === 0) {
       let element = alertelementToClone.cloneNode(true);
-      let filterLabel = document.querySelector('label[for=' + filter + ']');
+      let filterLabel = document.querySelector(`label[for=${filter}]`);
       element.querySelector('.filter-name').textContent = '"' + filterLabel.textContent + '"';
       filterBlock.appendChild(element);
     }
@@ -179,13 +173,14 @@
       
       let infoSup = document.createElement('sup');
       infoSup.innerHTML = picturesQuantity;
-      let filterLabel = document.querySelector('label[for=' + filterId + ']');
+      let filterLabel = document.querySelector(`label[for=${filterId}]`);
+      
       let next = filterLabel.nextSibling;
       filterBlock.insertBefore(infoSup, next);
    
       filtres[i].addEventListener('click', function() {
         setFilterEnabled(this.id);
-      })
+      });
     }
     
     if (filterBlock.classList.contains('invisible')) {
