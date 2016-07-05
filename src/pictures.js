@@ -100,7 +100,7 @@
     let filterChilds = filterBlock.children;
     
     //обращение к прототипу массива, для того, чтобы применить к коллекции методы массива
-    Array.prototype.forEach.call(filterChilds, function(item) {
+    [].forEach.call(filterChilds, function(item) {
       if (item.classList.contains('alert')) {
         filterBlock.removeChild(item);
       }
