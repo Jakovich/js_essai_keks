@@ -4,7 +4,17 @@
   
   let filterBlock = document.querySelector('.filters');
   let templateElement = document.querySelector('#picture-template');
-  let pictures = window.pictures;
+  
+  let pictures;
+  
+  const PICTURES_LOAD_URL = '//o0.github.io/assets/json/pictures.json';
+  
+  /** @enum {number} */
+  var FILTER = {
+    'LIKES': 'filter-popular',
+    'NEWS': 'filter-new',
+    'DISCUSSED': 'filter-discussed',
+  };
   
   let picturesContainer = document.querySelector('.pictures');
   
@@ -50,35 +60,140 @@
     return element;
   };
   
-  /**
-  * @param {string} address
-  * @param {function} callback
- */
   
-  let getJSONP = (address = '//up.htmlacademy.ru/assets/js_intensive/jsonp/pictures.js', callback = window.__picturesLoadCallback) => {
-    let scriptFunct = document.createElement('script');
-    scriptFunct.src = address;
-    let currentScript = document.currentScript;
-    document.body.insertBefore(scriptFunct, currentScript);
-    scriptFunct.onload = () => callback(); 
+  /** @param {function(Array.<Object>)} callback */
+  let getPictures = (callback) => {
+    let xhr = new XMLHttpRequest();
+    xhr.timeout = 10000;
+    
+    xhr.onloadstart = () => picturesContainer.classList.add('pictures-loading');
+    
+    xhr.onerror = () => {
+      picturesContainer.classList.remove('pictures-loading');
+      picturesContainer.classList.add('pictures-failure');
+    }
+    
+    xhr.ontimeout = xhr.onerror;
+    
+    /** @param {ProgressEvent} */
+    xhr.onload = (evt) => {
+      picturesContainer.classList.remove('pictures-loading');
+      
+      if(filterBlock.classList.contains('hidden')) {
+        filterBlock.classList.remove('hidden')
+      }
+      
+      let loadedData = JSON.parse(evt.target.response);
+      callback(loadedData);
+    };
+
+    xhr.open('GET', PICTURES_LOAD_URL);
+    xhr.send();
   };
   
   
   /**
-  * @param {Object} data
-  */
+  * @param {Array.<Object>} hotels
+  * @param {string} filter
+ */
+  let getFilteredPictures = (pictures, filter) => {
+    let filterChilds = filterBlock.children;
+    
+    //обращение к прототипу массива, для того, чтобы применить к коллекции методы массива
+    [].forEach.call(filterChilds, function(item) {
+      if (item.classList.contains('alert')) {
+        filterBlock.removeChild(item);
+      }
+    });
+    
+    let alertTemplate = document.querySelector('#alert-template');
+    let alertelementToClone = ('content' in alertTemplate) ? alertTemplate.content.querySelector('.alert') : alertTemplate.querySelector('.alert');
+   
+    let picturesToFilter = pictures.slice(0);
+    let currentPeriod = new Date() - 4 * 24 * 60 * 60 * 1000; //4 дня - период показа при выборе фильтра "недавние"
+    switch(filter) {
+      case FILTER.LIKES:
+        picturesToFilter.sort((a, b) => b.likes - a.likes);
+        
+      break;
+      case FILTER.DISCUSSED:
+        picturesToFilter.sort((a, b) => b.comments - a.comments);
+      break;
+        
+      case FILTER.NEWS: 
+        picturesToFilter = picturesToFilter.filter((a) => new Date(a.date) >= currentPeriod);
+        
+        picturesToFilter.sort((a, b) => b.date - a.date);
+        
+      break;   
+    }
+    
+    //вывод сообщения в случае, если ни один элемент не соответствует фильтру
+    if (picturesToFilter.length === 0) {
+      let element = alertelementToClone.cloneNode(true);
+      let filterLabel = document.querySelector(`label[for=${filter}]`);
+      element.querySelector('.filter-name').textContent = '"' + filterLabel.textContent + '"';
+      filterBlock.appendChild(element);
+    }
+    
+    return picturesToFilter;
+    
+  };
   
-  window.__picturesLoadCallback = (data) => {
-    data.forEach(function(picture) {
+  /** @param {Array.<Object>} pictures */
+  let renderPictures = (pictures) => {
+    picturesContainer.innerHTML = '';
+    pictures.forEach(function(picture) {
       getPictureElement(picture, picturesContainer);
     });
+    
   };
   
-  getJSONP();
+  /** @param {string} filter */
+  let setFilterEnabled = (filter) => {
+    let filteredPictures = getFilteredPictures(pictures, filter);
+    renderPictures(filteredPictures);
+  };
   
-  if (filterBlock.classList.contains('invisible')) {
-    filterBlock.classList.remove('invisible');
-  }
+  let setFiltrationEnabled = () => {
+    let filtres = filterBlock.querySelectorAll('.filters-radio');
+    
+    for (var i = 0; i < filtres.length; i++) {
+      
+      let filterId = filtres[i].getAttribute('id');
+      
+      //создание надписи с кол-вом фотографий, подходящих под этот фильтр
+      let filteredPictures = getFilteredPictures(pictures, filterId);
+      let picturesQuantity = filteredPictures.length;
+      
+      //добавление disabled фильтрам, которым не соответствует ни одна фоо
+      if (picturesQuantity === 0) {
+        filtres[i].setAttribute('disabled', true);
+      }
+      
+      let infoSup = document.createElement('sup');
+      infoSup.innerHTML = picturesQuantity;
+      let filterLabel = document.querySelector(`label[for=${filterId}]`);
+      
+      let next = filterLabel.nextSibling;
+      filterBlock.insertBefore(infoSup, next);
+   
+      filtres[i].addEventListener('click', function() {
+        setFilterEnabled(this.id);
+      });
+    }
+    
+    if (filterBlock.classList.contains('invisible')) {
+      filterBlock.classList.remove('invisible');
+    }
+    
+  };
+  
+  getPictures(function(loadedPictures){
+    pictures = loadedPictures;
+    setFiltrationEnabled();
+    renderPictures(pictures);
+  });
   
   
 })();
