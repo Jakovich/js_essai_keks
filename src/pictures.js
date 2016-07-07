@@ -7,10 +7,21 @@
   
   let pictures;
   
+  let filteredPictures = [];
+  
+  const PAGE_SIZE = 12;
+  
+  const THROTTLE_DELAY = 100;
+  
+  const GAP = 100;
+  
+  /** @type {number} */
+  let pageNumber = 0;
+  
   const PICTURES_LOAD_URL = '//o0.github.io/assets/json/pictures.json';
   
   /** @enum {number} */
-  var FILTER = {
+  const FILTER = {
     'LIKES': 'filter-popular',
     'NEWS': 'filter-new',
     'DISCUSSED': 'filter-discussed',
@@ -140,19 +151,35 @@
     
   };
   
-  /** @param {Array.<Object>} pictures */
-  let renderPictures = (pictures) => {
-    picturesContainer.innerHTML = '';
-    pictures.forEach(function(picture) {
-      getPictureElement(picture, picturesContainer);
-    });
+  /*
+  * @param {Array.<Object>} pictures 
+  * @param {number} page
+  * @param {boolean} replace
+  */
+  let renderPictures = (pictures, page, replace) => {
+    
+    if (replace) {
+      picturesContainer.innerHTML = '';
+    }
+    
+    let from = page * PAGE_SIZE;
+    let to = from + PAGE_SIZE;
+    
+    pictures.slice(from, to).forEach(function(picture) {
+    getPictureElement(picture, picturesContainer);
+  });
     
   };
   
   /** @param {string} filter */
   let setFilterEnabled = (filter) => {
     let filteredPictures = getFilteredPictures(pictures, filter);
-    renderPictures(filteredPictures);
+    pageNumber = 0;
+    renderPictures(filteredPictures, pageNumber, true);
+    if (isBottomReached() && isNextPageAvailable(pictures, pageNumber, PAGE_SIZE)) {
+      pageNumber++;
+      renderPictures(filteredPictures, pageNumber, false);
+    }
   };
   
   let setFiltrationEnabled = () => {
@@ -189,10 +216,40 @@
     
   };
   
+  let setScrollEnabled = function() {
+    let lastCall = Date.now();
+    window.addEventListener('scroll', function() {
+      if (Date.now() - lastCall >= THROTTLE_DELAY) {
+        if (isBottomReached() &&
+          isNextPageAvailable(pictures, pageNumber, PAGE_SIZE)) {
+          pageNumber++;
+          renderPictures(pictures, pageNumber, false);
+        }
+        lastCall = Date.now();
+      }
+    });
+  };
+ 
+  /** @return {boolean} */
+  let isBottomReached = () => {
+    let picturesPosition = picturesContainer.getBoundingClientRect();
+    return picturesPosition.bottom - window.innerHeight - GAP <= 0;
+  };
+  
+  /**
+  * @param {Array} hotels
+  * @param {number} page
+  * @param {number} pageSize
+  * @return {boolean}
+  */
+  let isNextPageAvailable = (pictures, page, pageSize) => page < Math.floor(pictures.length / pageSize);
+  
+  
   getPictures(function(loadedPictures){
     pictures = loadedPictures;
     setFiltrationEnabled();
-    renderPictures(pictures);
+    setFilterEnabled('LIKES'); 
+    setScrollEnabled();
   });
   
   
