@@ -216,7 +216,7 @@
     
   };
   
-  let setScrollEnabled = function() {
+  let setScrollEnabled = () => {
     let lastCall = Date.now();
     window.addEventListener('scroll', function() {
       if (Date.now() - lastCall >= THROTTLE_DELAY) {
