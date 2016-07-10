@@ -166,8 +166,8 @@
     let to = from + PAGE_SIZE;
     
     pictures.slice(from, to).forEach(function(picture) {
-    getPictureElement(picture, picturesContainer);
-  });
+      getPictureElement(picture, picturesContainer);
+    });
     
   };
   
