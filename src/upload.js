@@ -163,12 +163,13 @@
           resizeForm.classList.remove('invisible');
 
           hideMessage();
-          checkValid();
+          
         };
         
         
 
         fileReader.readAsDataURL(element.files[0]);
+        checkValid();
       } else {
         // Показ сообщения об ошибке, если загружаемый файл, не является
         // поддерживаемым изображением.
@@ -331,7 +332,7 @@
    *Обрабочики изменения значения полей формы
   */
   
-  resizeForm.addEventListener('input', function() {
+  resizeForm.addEventListener('change', function() {
     checkValid();
     currentResizer.setConstraint(parseInt(resizeX.value), parseInt(resizeY.value), parseInt(resizeSize.value));   
   })
@@ -396,6 +397,7 @@
      resizeX.value = Math.floor(currentResizer.getConstraint().x);
      resizeY.value = Math.floor(currentResizer.getConstraint().y);
      resizeSize.value = Math.floor(currentResizer.getConstraint().side);
+     checkValid();
    })
    
    
@@ -404,5 +406,5 @@
   
   cleanupResizer();
   updateBackground();
-  checkValid();
+
 })();
