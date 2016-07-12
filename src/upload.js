@@ -161,12 +161,9 @@
 
           uploadForm.classList.add('invisible');
           resizeForm.classList.remove('invisible');
-
           hideMessage();
           
         };
-        
-        
 
         fileReader.readAsDataURL(element.files[0]);
         checkValid();
@@ -324,8 +321,6 @@
   @type {Element}
   */
   let submitButton = resizeForm.querySelector('#resize-fwd');
-  
- 
 
   
   /**
@@ -400,10 +395,6 @@
      checkValid();
    })
    
-   
-  
-  
-  
   cleanupResizer();
   updateBackground();
 
