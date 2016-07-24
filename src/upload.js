@@ -143,7 +143,7 @@
    * @param {Event} evt
    */
   uploadForm.addEventListener('change', function(evt) {
-    var element = evt.target;
+    let element = evt.target;
     if (element.id === 'upload-file') {
       // Проверка типа загружаемого файла, тип должен быть изображением
       // одного из форматов: JPEG, PNG, GIF или SVG.
