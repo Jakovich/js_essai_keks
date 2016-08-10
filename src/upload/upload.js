@@ -7,7 +7,7 @@
 
 'use strict';
 
-(function() {
+  let formUtils = require('./formUtils');
   
   let browserCookies = require('browser-cookies');
   
@@ -232,20 +232,6 @@
   
   filterImage.className = 'filter-image-preview ' + filterMap[filterChoice.value];
   
-  /**
-    функция установки даты жизни cookies - количество дней, прошедших с дня рождения (06.03)
-    @return {number}
-  */
-  
-  let setTimeofExpires = () => {
-    let currentDate = new Date();
-    let currentYear = currentDate.getFullYear();
-    let birthDate = (currentDate <= new Date(currentYear, 2, 6)) ? new Date(currentYear - 1, 2, 6) : new Date(currentYear, 2, 6);
-    let expireDateMilisec = currentDate - birthDate;
-    let expireDate = Math.floor(expireDateMilisec / 3600 / 24 / 1000);
-    return expireDate;
-  };
-  
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
@@ -290,7 +276,7 @@
     /**
     @type {number}
     */
-    let expireDateValue = setTimeofExpires ();
+    let expireDateValue = formUtils.setTimeofExpires();
     /**
       запись в cookies последнего выбранного значения
     */
@@ -357,7 +343,7 @@
     } else {
       submitButton.setAttribute('disabled', true);
       if (!(resizeForm.lastChild.className === 'error')) {
-        errorMsg();
+        formUtils.errorMsg(resizeForm);
       }
     }
   };
@@ -371,22 +357,7 @@
   */
   let validCondition = (val1, val2, val3) => val1 >= 0 && val2 >= 0 && (val1 + val3) <= currentResizer._image.naturalWidth && (val2 + val3) <= currentResizer._image.naturalHeight;
   
-  /**
-   *функция формирования сообщения об ошибки
-  */
   
-  let errorMsg = () => {
-    var msg = document.createElement('span');
-    msg.style.display = 'block';
-    msg.style.color = 'red';
-    msg.style.position = 'absolute';
-    msg.style.left = '100px';
-    msg.style.bottom = '0px';
-    msg.style.zIndex = '100';
-    msg.innerHTML = '«кадр» должен находиться в пределах исходного изображения';
-    msg.className = 'error';
-    resizeForm.appendChild(msg);
-  };
   
    window.addEventListener('resizerchange', function(){
      resizeX.value = Math.floor(currentResizer.getConstraint().x);
@@ -398,4 +369,4 @@
   cleanupResizer();
   updateBackground();
 
-})();
+
