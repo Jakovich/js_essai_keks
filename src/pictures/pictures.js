@@ -69,6 +69,9 @@ let setFiltrationEnabled = () => {
   
 };
 
+/**
+функция показа картинок при скролле
+*/
 let setScrollEnabled = () => {
   let lastCall = Date.now();
   window.addEventListener('scroll', function () {
@@ -83,10 +86,23 @@ let setScrollEnabled = () => {
   });
 };
 
+/**
+функция получения значения фильтра
+при загрузки страницы и первоначальная фильтрация 
+картинок в соответствии с этим значением
+*/
+
+let setInitialFilter = () => {
+  let filterForm = document.querySelector('.filters');
+  let currentFilter = filterForm['filter'].value;
+  let currentFilterId = 'filter-' + currentFilter;
+  setFilterEnabled(currentFilterId);
+}
+
 getPictures(function (loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
-  setFilterEnabled('filter-popular');
+  setInitialFilter();
   setScrollEnabled();
   
 });
