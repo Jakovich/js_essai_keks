@@ -5,7 +5,9 @@ let getPictureElement = require('./getPictureElement');
 let getPictures = require('./getPictures');
 let filterBlock = document.querySelector('.filters');
 let renderPictures = require('./renderPictures');
-let getFilteredPictures = require('../filters/filter.js');
+let getFilteredPictures = require('../filters/filter');
+let gallery = require('../gallery');
+
 let pictures;
 
 let filteredPictures = [];
@@ -29,6 +31,8 @@ let setFilterEnabled = (filter) => {
     pageNumber++;
     renderPictures(filteredPictures, pageNumber, false);
   }
+  gallery.getPhotos(filteredPictures);
+  
 };
 
 let setFiltrationEnabled = () => {
@@ -80,9 +84,13 @@ let setScrollEnabled = () => {
 };
 
 
+
+
+
 getPictures(function (loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
   setFilterEnabled('LIKES');
   setScrollEnabled();
+  
 });

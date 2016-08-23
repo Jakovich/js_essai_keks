@@ -6,7 +6,7 @@ let templateElement = document.querySelector('#picture-template');
     filterBlock.classList.add('invisible');
   }
   
-  let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
+let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
   
   
   
