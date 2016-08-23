@@ -55,10 +55,10 @@ let hideGallery = () => {
 }
 
 let _onPhotoClick = () => {
-    ++numberPhoto;
-    if (numberPhoto > photosArray.length - 1) {
-      numberPhoto = 0;
-    }
+  ++numberPhoto;
+  if (numberPhoto > photosArray.length - 1) {
+    numberPhoto = 0;
+  }
   showPhoto(numberPhoto);
 };
 
