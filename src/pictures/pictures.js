@@ -30,10 +30,8 @@ let setFilterEnabled = (filter) => {
   if (utils.isBottomReached() && utils.isNextPageAvailable(pictures, pageNumber, PAGE_SIZE)) {
     pageNumber++;
     renderPictures(filteredPictures, pageNumber, false);
-  
+  };
   gallery.getPhotos(filteredPictures);
-  
-};
 }
 
 let setFiltrationEnabled = () => {

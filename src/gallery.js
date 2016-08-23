@@ -20,19 +20,18 @@ let getPhotos = (arr) => photosArray = arr.slice();
  
 /**
 функция показа галереи
-@param {number}
+@param {number} indexPhoto
 */
 
-let showGallery = (photoNumber) =>  {
+let showGallery = (indexPhoto) =>  {
   if(photoGallery.classList.contains('invisible')) {
    photoGallery.classList.remove('invisible'); 
   }
-  showPhoto(photoNumber);
-  numberPhoto = photoNumber;
+  showPhoto(indexPhoto);
+  numberPhoto = indexPhoto;
   window.addEventListener('keydown', _onDocumentKeyDown);
   galleryClose.addEventListener('click', hideGallery);
-  photoGallery.addEventListener('click', hideGallery);
-  //galleryImg.addEventListener('click', _onPhotoClick);
+  galleryImg.addEventListener('click', _onPhotoClick);
 }
 
 /**
@@ -41,7 +40,6 @@ let showGallery = (photoNumber) =>  {
 */
 
 let showPhoto = (num) => {
-  
   galleryImg.src = photosArray[num].url;
   galleryLikes.innerHTML = photosArray[num].likes;
   galleryComments.innerHTML = photosArray[num].comments;
@@ -53,15 +51,15 @@ let hideGallery = () => {
   photoGallery.classList.add('invisible');
   window.removeEventListener('keydown', _onDocumentKeyDown);
   galleryClose.removeEventListener('click', hideGallery);
-  photoGallery.removeEventListener('click', hideGallery);
-  //galleryImg.removeEventListener('click', _onPhotoClick);
+  galleryImg.removeEventListener('click', _onPhotoClick);
 }
 
 let _onPhotoClick = () => {
-  if(numberPhoto < photosArray.length - 1) {
     ++numberPhoto;
-    showPhoto(numberPhoto);
-  }
+    if (numberPhoto > photosArray.length - 1) {
+      numberPhoto = 0;
+    }
+  showPhoto(numberPhoto);
 };
 
 /**
@@ -69,7 +67,6 @@ let _onPhotoClick = () => {
 */
 let _onDocumentKeyDown = (event) => {
   let escKey = 27;//код клавиши ESC
-  
   if (event.keyCode === escKey) {
     if (!photoGallery.classList.contains('invisible')) {
       hideGallery();
