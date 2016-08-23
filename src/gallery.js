@@ -17,12 +17,7 @@ let photosArray = [];
 @param {Array.<Object>} arr
 */
 let getPhotos = (arr) => photosArray = arr.slice();
-  
-  
-  
-
  
-
 /**
 функция показа галереи
 @param {number}
@@ -33,10 +28,11 @@ let showGallery = (photoNumber) =>  {
    photoGallery.classList.remove('invisible'); 
   }
   showPhoto(photoNumber);
+  numberPhoto = photoNumber;
   window.addEventListener('keydown', _onDocumentKeyDown);
   galleryClose.addEventListener('click', hideGallery);
   photoGallery.addEventListener('click', hideGallery);
-  galleryImg.addEventListener('click', _onPhotoClick);
+  //galleryImg.addEventListener('click', _onPhotoClick);
 }
 
 /**
@@ -45,6 +41,7 @@ let showGallery = (photoNumber) =>  {
 */
 
 let showPhoto = (num) => {
+  
   galleryImg.src = photosArray[num].url;
   galleryLikes.innerHTML = photosArray[num].likes;
   galleryComments.innerHTML = photosArray[num].comments;
@@ -57,7 +54,7 @@ let hideGallery = () => {
   window.removeEventListener('keydown', _onDocumentKeyDown);
   galleryClose.removeEventListener('click', hideGallery);
   photoGallery.removeEventListener('click', hideGallery);
-  galleryImg.removeEventListener('click', _onPhotoClick);
+  //galleryImg.removeEventListener('click', _onPhotoClick);
 }
 
 let _onPhotoClick = () => {
