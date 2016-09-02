@@ -67,10 +67,8 @@ let _onPhotoClick = () => {
 */
 let _onDocumentKeyDown = (event) => {
   let escKey = 27;//код клавиши ESC
-  if (event.keyCode === escKey) {
-    if (!photoGallery.classList.contains('invisible')) {
-      hideGallery();
-    }
+  if (event.keyCode === escKey && !photoGallery.classList.contains('invisible')) {
+    hideGallery();
   }
 };
 

@@ -16,7 +16,7 @@ let renderPictures = (pictures, page, replace) => {
   let from = page * PAGE_SIZE;
   let to = from + PAGE_SIZE;
 
-  pictures.slice(from, to).forEach(function (picture) {
+  pictures.slice(from, to).forEach(function(picture) {
     getPictureElement(picture, picturesContainer, pictures);
   });
 

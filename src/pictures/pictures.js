@@ -32,7 +32,6 @@ let setFilterEnabled = (filter) => {
     renderPictures(filteredPictures, pageNumber, false);
   };
   gallery.getPhotos(filteredPictures);
-  
 }
 
 let setFiltrationEnabled = () => {
@@ -58,15 +57,13 @@ let setFiltrationEnabled = () => {
     let next = filterLabel.nextSibling;
     filterBlock.insertBefore(infoSup, next);
 
-    filtres[i].addEventListener('click', function () {
+    filtres[i].addEventListener('click', function() {
       setFilterEnabled(this.id);
     });
   }
-
   if (filterBlock.classList.contains('invisible')) {
     filterBlock.classList.remove('invisible');
   }
-  
 };
 
 /**
@@ -74,7 +71,7 @@ let setFiltrationEnabled = () => {
 */
 let setScrollEnabled = () => {
   let lastCall = Date.now();
-  window.addEventListener('scroll', function () {
+  window.addEventListener('scroll', function() {
     if (Date.now() - lastCall >= THROTTLE_DELAY) {
       if (utils.isBottomReached() &&
         utils.isNextPageAvailable(filteredPictures, pageNumber, PAGE_SIZE)) {
@@ -99,7 +96,7 @@ let setInitialFilter = () => {
   setFilterEnabled(currentFilterId);
 }
 
-getPictures(function (loadedPictures) {
+getPictures(function(loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
   setInitialFilter();
