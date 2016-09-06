@@ -5,7 +5,9 @@ let getPictureElement = require('./getPictureElement');
 let getPictures = require('./getPictures');
 let filterBlock = document.querySelector('.filters');
 let renderPictures = require('./renderPictures');
-let getFilteredPictures = require('../filters/filter.js');
+let getFilteredPictures = require('../filters/filter');
+let gallery = require('../gallery');
+
 let pictures;
 
 let filteredPictures = [];
@@ -22,14 +24,15 @@ let pageNumber = 0;
 
 /** @param {string} filter */
 let setFilterEnabled = (filter) => {
-  let filteredPictures = getFilteredPictures(pictures, filter);
+  filteredPictures = getFilteredPictures(pictures, filter);
   pageNumber = 0;
   renderPictures(filteredPictures, pageNumber, true);
   if (utils.isBottomReached() && utils.isNextPageAvailable(pictures, pageNumber, PAGE_SIZE)) {
     pageNumber++;
     renderPictures(filteredPictures, pageNumber, false);
-  }
-};
+  };
+  gallery.getPhotos(filteredPictures);
+}
 
 let setFiltrationEnabled = () => {
   let filtres = filterBlock.querySelectorAll('.filters-radio');
@@ -39,7 +42,7 @@ let setFiltrationEnabled = () => {
     let filterId = filtres[i].getAttribute('id');
 
     //создание надписи с кол-вом фотографий, подходящих под этот фильтр
-    let filteredPictures = getFilteredPictures(pictures, filterId);
+    filteredPictures = getFilteredPictures(pictures, filterId);
     let picturesQuantity = filteredPictures.length;
 
     //добавление disabled фильтрам, которым не соответствует ни одна фоо
@@ -54,35 +57,49 @@ let setFiltrationEnabled = () => {
     let next = filterLabel.nextSibling;
     filterBlock.insertBefore(infoSup, next);
 
-    filtres[i].addEventListener('click', function () {
+    filtres[i].addEventListener('click', function() {
       setFilterEnabled(this.id);
     });
   }
-
   if (filterBlock.classList.contains('invisible')) {
     filterBlock.classList.remove('invisible');
   }
-
 };
 
+/**
+функция показа картинок при скролле
+*/
 let setScrollEnabled = () => {
   let lastCall = Date.now();
-  window.addEventListener('scroll', function () {
+  window.addEventListener('scroll', function() {
     if (Date.now() - lastCall >= THROTTLE_DELAY) {
       if (utils.isBottomReached() &&
-        utils.isNextPageAvailable(pictures, pageNumber, PAGE_SIZE)) {
+        utils.isNextPageAvailable(filteredPictures, pageNumber, PAGE_SIZE)) {
         pageNumber++;
-        renderPictures(pictures, pageNumber, false);
+        renderPictures(filteredPictures, pageNumber, false);
       }
       lastCall = Date.now();
     }
   });
 };
 
+/**
+функция получения значения фильтра
+при загрузки страницы и первоначальная фильтрация 
+картинок в соответствии с этим значением
+*/
 
-getPictures(function (loadedPictures) {
+let setInitialFilter = () => {
+  let filterForm = document.querySelector('.filters');
+  let currentFilter = filterForm['filter'].value;
+  let currentFilterId = 'filter-' + currentFilter;
+  setFilterEnabled(currentFilterId);
+}
+
+getPictures(function(loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
-  setFilterEnabled('LIKES');
+  setInitialFilter();
   setScrollEnabled();
+  
 });

@@ -533,6 +533,13 @@ input[type=radio]:checked + .upload-filter-label {
   background: #ffffff;
 }
 
+.gallery-overlay-image[src="failed.jpg"],
+.gallery-overlay-image[src="photos/26.mp4"] {
+ display: block;
+  width: 640px;
+  height: 640px;
+}
+
 .gallery-overlay-image[src=""] {
   display: block;
   width: 640px;

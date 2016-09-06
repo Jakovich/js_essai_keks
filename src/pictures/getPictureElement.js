@@ -1,12 +1,12 @@
 'use strict';
 let filterBlock = document.querySelector('.filters');
-
+let gallery = require('../gallery')
 let templateElement = document.querySelector('#picture-template');
   if (!(filterBlock.classList.contains('invisible'))) {
     filterBlock.classList.add('invisible');
   }
   
-  let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
+let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
   
   
   
@@ -16,10 +16,10 @@ let templateElement = document.querySelector('#picture-template');
   * @return {HTMLElement}
  */
   
-  let getPictureElement = ({url, likes, comments}, container) => {
+  let getPictureElement = (data, container, picturesArr) => {
     let element = elementToClone.cloneNode(true);
-    element.querySelector('.picture-comments').textContent = comments;
-    element.querySelector('.picture-likes').textContent = likes;
+    element.querySelector('.picture-comments').textContent = data.comments;
+    element.querySelector('.picture-likes').textContent = data.likes;
     
     let pictureItem = new Image();
     
@@ -38,9 +38,16 @@ let templateElement = document.querySelector('#picture-template');
     
     pictureItem.onerror = () => element.classList.add('picture-load-failure');
     
-    pictureItem.src = url;
+    pictureItem.src = data.url;
     
     container.appendChild(element);
+    
+    element.addEventListener('click', function(evt) {
+      evt.preventDefault();
+      console.log(picturesArr.indexOf(data))
+      gallery.showGallery(picturesArr.indexOf(data));
+      
+    });
     return element;
   };
 

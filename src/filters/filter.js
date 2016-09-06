@@ -14,7 +14,7 @@ let getFilteredPictures = (pictures, filter) => {
   let filterChilds = filterBlock.children;
 
   //обращение к прототипу массива, для того, чтобы применить к коллекции методы массива
-    [].forEach.call(filterChilds, function (item) {
+    [].forEach.call(filterChilds, function(item) {
     if (item.classList.contains('alert')) {
       filterBlock.removeChild(item);
     }
