@@ -6,6 +6,7 @@ let galleryImg = photoGallery.querySelector('.gallery-overlay-image');
 let galleryLikes = photoGallery.querySelector('.likes-count');
 let galleryComments = photoGallery.querySelector('.comments-count');
 let numberPhoto;
+const ESC_KEY = 27; //код клавиши ESC
 
 /**
 @type {Array.<Object>}
@@ -17,15 +18,15 @@ let photosArray = [];
 @param {Array.<Object>} arr
 */
 let getPhotos = (arr) => photosArray = arr.slice();
- 
+
 /**
 функция показа галереи
 @param {number} indexPhoto
 */
 
-let showGallery = (indexPhoto) =>  {
-  if(photoGallery.classList.contains('invisible')) {
-   photoGallery.classList.remove('invisible'); 
+let showGallery = (indexPhoto) => {
+  if (photoGallery.classList.contains('invisible')) {
+    photoGallery.classList.remove('invisible');
   }
   showPhoto(indexPhoto);
   numberPhoto = indexPhoto;
@@ -40,13 +41,13 @@ let showGallery = (indexPhoto) =>  {
 */
 
 let showPhoto = (num) => {
-  galleryImg.src = photosArray[num].url;
-  galleryLikes.innerHTML = photosArray[num].likes;
-  galleryComments.innerHTML = photosArray[num].comments;
-}
-/**
-функция скрытия галереи
-*/
+    galleryImg.src = photosArray[num].url;
+    galleryLikes.innerHTML = photosArray[num].likes;
+    galleryComments.innerHTML = photosArray[num].comments;
+  }
+  /**
+  функция скрытия галереи
+  */
 let hideGallery = () => {
   photoGallery.classList.add('invisible');
   window.removeEventListener('keydown', _onDocumentKeyDown);
@@ -66,16 +67,13 @@ let _onPhotoClick = () => {
 @param {Event} event
 */
 let _onDocumentKeyDown = (event) => {
-  let escKey = 27;//код клавиши ESC
-  if (event.keyCode === escKey && !photoGallery.classList.contains('invisible')) {
+
+  if (event.keyCode === ESC_KEY && !photoGallery.classList.contains('invisible')) {
     hideGallery();
   }
 };
 
-module.exports =  { 
+module.exports = {
   getPhotos: getPhotos,
   showGallery: showGallery
 }
-
-
-
