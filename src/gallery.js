@@ -41,13 +41,15 @@ let showGallery = (indexPhoto) => {
 */
 
 let showPhoto = (num) => {
-    galleryImg.src = photosArray[num].url;
-    galleryLikes.innerHTML = photosArray[num].likes;
-    galleryComments.innerHTML = photosArray[num].comments;
-  }
-  /**
-  функция скрытия галереи
-  */
+  galleryImg.src = photosArray[num].url;
+  galleryLikes.innerHTML = photosArray[num].likes;
+  galleryComments.innerHTML = photosArray[num].comments;
+}
+
+/**
+функция скрытия галереи
+*/
+
 let hideGallery = () => {
   photoGallery.classList.add('invisible');
   window.removeEventListener('keydown', _onDocumentKeyDown);
@@ -67,7 +69,6 @@ let _onPhotoClick = () => {
 @param {Event} event
 */
 let _onDocumentKeyDown = (event) => {
-
   if (event.keyCode === ESC_KEY && !photoGallery.classList.contains('invisible')) {
     hideGallery();
   }
