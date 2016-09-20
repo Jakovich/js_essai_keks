@@ -53,11 +53,11 @@ let Photo = function(data, container, picturesArr) {
   var self = this;
   this.data = data;
   this.element = getPictureElement(this.data);
-  this.onClickShow = function(evt) {
+  this.onClickShow = (evt) => {
     evt.preventDefault();
     gallery.showGallery(picturesArr.indexOf(self.data));
   }
-  this.remove = function() {
+  this.remove = () => {
     this.element.removeEventListener('click', self.onClickShow);
     this.element.parentNode.removeChild(self.element);
   };
