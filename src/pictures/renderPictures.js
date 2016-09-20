@@ -1,19 +1,19 @@
 'use strict';
 let picturesContainer = document.querySelector('.pictures');
 const PAGE_SIZE = 12;
-let Photo = require('./getPictureElement');
+let Picture = require('./picture');
 /*
  * @param {Array.<Object>} pictures 
  * @param {number} page
  * @param {boolean} replace
  */
-let renderedPhoto = [];
+let renderedPictures = [];
 let renderPictures = (pictures, page, replace) => {
 
   if (replace) {
-    renderedPhoto.forEach(function(photo){
-    photo.remove();
-    renderedPhoto = [];
+    renderedPictures.forEach(function(picture){
+    picture.remove();
+    renderedPictures = [];
    });
   }
 
@@ -21,7 +21,7 @@ let renderPictures = (pictures, page, replace) => {
   let to = from + PAGE_SIZE;
 
   pictures.slice(from, to).forEach(function(picture) {
-    renderedPhoto.push(new Photo(picture, picturesContainer, pictures));
+    renderedPictures.push(new Picture(picture, picturesContainer, pictures));
   });
 
 };

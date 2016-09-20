@@ -2,13 +2,11 @@
 let filterBlock = document.querySelector('.filters');
 let gallery = require('../gallery')
 let templateElement = document.querySelector('#picture-template');
-  if (!(filterBlock.classList.contains('invisible'))) {
-    filterBlock.classList.add('invisible');
-  }
+if (!(filterBlock.classList.contains('invisible'))) {
+  filterBlock.classList.add('invisible');
+}
   
 let elementToClone = ('content' in templateElement) ? templateElement.content.querySelector('.picture') : templateElement.querySelector('.picture');
-  
-  
 
   
   /**
@@ -49,7 +47,7 @@ let getPictureElement = (data) => {
   * @constructor
 */
 
-let Photo = function(data, container, picturesArr) {
+let Picture = function(data, container, picturesArr) {
   var self = this;
   this.data = data;
   this.element = getPictureElement(this.data);
@@ -65,4 +63,4 @@ let Photo = function(data, container, picturesArr) {
   this.element.addEventListener('click', self.onClickShow);
 }
 
-module.exports = Photo;
+module.exports = Picture;
