@@ -1,7 +1,6 @@
 'use strict';
 
 let utils = require('../utils');
-let getPictureElement = require('./getPictureElement');
 let getPictures = require('./getPictures');
 let filterBlock = document.querySelector('.filters');
 let renderPictures = require('./renderPictures');
