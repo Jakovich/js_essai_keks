@@ -5,7 +5,7 @@ let getPictures = require('./getPictures');
 let filterBlock = document.querySelector('.filters');
 let renderPictures = require('./renderPictures');
 let getFilteredPictures = require('../filters/filter');
-let gallery = require('../gallery');
+let Gallery = require('../gallery');
 
 let pictures;
 
@@ -30,7 +30,7 @@ let setFilterEnabled = (filter) => {
     pageNumber++;
     renderPictures(filteredPictures, pageNumber, false);
   };
-  gallery.getPhotos(filteredPictures);
+  Gallery.getPhotos(filteredPictures);
 }
 
 let setFiltrationEnabled = () => {
