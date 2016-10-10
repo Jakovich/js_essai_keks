@@ -58,6 +58,7 @@ let setFiltrationEnabled = () => {
 
     filtres[i].addEventListener('click', function() {
       setFilterEnabled(this.id);
+      localStorage.setItem("filter", this.id);
     });
   }
   if (filterBlock.classList.contains('invisible')) {
@@ -82,23 +83,10 @@ let setScrollEnabled = () => {
   });
 };
 
-/**
-функция получения значения фильтра
-при загрузки страницы и первоначальная фильтрация 
-картинок в соответствии с этим значением
-*/
-
-let setInitialFilter = () => {
-  let filterForm = document.querySelector('.filters');
-  let currentFilter = filterForm['filter'].value;
-  let currentFilterId = 'filter-' + currentFilter;
-  setFilterEnabled(currentFilterId);
-}
 
 getPictures(function(loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
-  setInitialFilter();
+  setFilterEnabled(localStorage.getItem('filter') || 'filter-popular');
   setScrollEnabled();
-  
 });
