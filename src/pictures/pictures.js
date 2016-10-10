@@ -88,5 +88,8 @@ getPictures(function(loadedPictures) {
   pictures = loadedPictures;
   setFiltrationEnabled();
   setFilterEnabled(localStorage.getItem('filter') || 'filter-popular');
+  //установка поля радио в соответствии со значением в localStorage
+  filterBlock['filter'].value = localStorage.getItem('filter').slice(7) || 'popular';
   setScrollEnabled();
+  
 });
