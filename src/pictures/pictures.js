@@ -58,7 +58,7 @@ let setFiltrationEnabled = () => {
 
     filtres[i].addEventListener('click', function() {
       setFilterEnabled(this.id);
-      localStorage.setItem("filter", this.id);
+      localStorage.setItem('filter', this.id);
     });
   }
   if (filterBlock.classList.contains('invisible')) {
