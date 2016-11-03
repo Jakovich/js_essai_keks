@@ -31,7 +31,6 @@ let Gallery = function() {
       self.photoGallery.classList.remove('invisible');
     }
     self.showPhoto(indexPhoto);
-    self.numberPhoto = indexPhoto;
     window.addEventListener('keydown', self._onDocumentKeyDown);
     self.galleryClose.addEventListener('click', self.hideGallery);
     self.galleryImg.addEventListener('click', self._onPhotoClick);
@@ -42,9 +41,21 @@ let Gallery = function() {
   */
   
   this.showPhoto = (num) => {
-    self.galleryImg.src = self.photosArray[num].url;
-    self.galleryLikes.innerHTML = self.photosArray[num].likes;
-    self.galleryComments.innerHTML = self.photosArray[num].comments;
+    if (typeof(num) === 'number') {
+      self.numberPhoto = num;
+      self.galleryImg.src = self.photosArray[num].url;
+      self.galleryLikes.innerHTML = self.photosArray[num].likes;
+      self.galleryComments.innerHTML = self.photosArray[num].comments;
+    } else if (typeof(num) === 'string') {
+      self.galleryImg.src = num;
+      for (let i = 0; i < self.photosArray.length; i++) {
+        if (self.photosArray[i].url === num) {
+          self.numberPhoto = self.photosArray.indexOf(self.photosArray[i]);
+        }
+      }
+      self.galleryLikes.innerHTML = self.photosArray[self.numberPhoto].likes;
+      self.galleryComments.innerHTML = self.photosArray[self.numberPhoto].comments;
+    }
   }
   
   /**
@@ -52,6 +63,7 @@ let Gallery = function() {
   */
 
   this.hideGallery = () => {
+    history.pushState('', document.title, window.location.pathname);
     self.photoGallery.classList.add('invisible');
     window.removeEventListener('keydown', self._onDocumentKeyDown);
     self.galleryClose.removeEventListener('click', self.hideGallery);
@@ -63,7 +75,7 @@ let Gallery = function() {
     if (self.numberPhoto > self.photosArray.length - 1) {
       self.numberPhoto = 0;
     }
-    self.showPhoto(self.numberPhoto);
+    location.hash = 'photo/' + self.photosArray[self.numberPhoto].url;
   };
 
   /**
@@ -74,6 +86,15 @@ let Gallery = function() {
       self.hideGallery();
     }
   };
+  
+  this.hashVerify = function() {
+    if (location.hash && location.hash.match(/#photo\/(\S+)/)) {
+      var hashLink = location.hash.match(/#photo\/(\S+)/);
+      this.showGallery(hashLink[1]);
+    }
+  };
+  
+  window.addEventListener('hashchange', this.hashVerify.bind(this));
 }
 
 module.exports = new Gallery();

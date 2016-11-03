@@ -91,5 +91,5 @@ getPictures(function(loadedPictures) {
   //установка поля радио в соответствии со значением в localStorage
   filterBlock['filter'].value = localStorage.getItem('filter').slice(7) || 'popular';
   setScrollEnabled();
-  
+  Gallery.hashVerify();
 });

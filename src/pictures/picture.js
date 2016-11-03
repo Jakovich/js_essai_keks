@@ -53,7 +53,7 @@ let Picture = function(data, container, picturesArr) {
   this.element = getPictureElement(this.data);
   this.onClickShow = (evt) => {
     evt.preventDefault();
-    gallery.showGallery(picturesArr.indexOf(self.data));
+    location.hash = 'photo/' + self.data.url;
   }
   this.remove = () => {
     this.element.removeEventListener('click', self.onClickShow);
