@@ -48,11 +48,11 @@ let Gallery = function() {
       self.galleryComments.innerHTML = self.photosArray[num].comments;
     } else if (typeof(num) === 'string') {
       self.galleryImg.src = num;
-      for (let i = 0; i < self.photosArray.length; i++) {
-        if (self.photosArray[i].url === num) {
-          self.numberPhoto = self.photosArray.indexOf(self.photosArray[i]);
+      self.photosArray.forEach(function(item, i){
+        if (item.url === num) {
+          self.numberPhoto = i;
         }
-      }
+      })
       self.galleryLikes.innerHTML = self.photosArray[self.numberPhoto].likes;
       self.galleryComments.innerHTML = self.photosArray[self.numberPhoto].comments;
     }
